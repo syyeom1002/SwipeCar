@@ -1,11 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class CarController : MonoBehaviour
 {
-    float moveSpeed = 0;
-    float dampingCoefficient = 0.96f;// 감쇠계수
+    private Vector3 startPos;
+    private float moveSpeed;
+    private float dampingCoefficient = 0.96f;
     // Start is called before the first frame update
     void Start()
     {
@@ -18,12 +20,23 @@ public class CarController : MonoBehaviour
         //마우스 왼쪽 버튼을 눌렀다면
         if (Input.GetMouseButtonDown(0))
         {
-            Debug.Log("왼쪽 버튼 눌림");
-            this.moveSpeed = 0.2f;
-            
+            Debug.LogFormat("down:{0}",Input.mousePosition);
+            this.startPos = Input.mousePosition;
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {
+            Debug.LogFormat("up{0}",Input.mousePosition);
+            Vector3 endPos = Input.mousePosition;
+
+            float swipeLength =endPos.x - startPos.x;
+            Debug.LogFormat("{0}", swipeLength); //화면좌표에서 두점 사이의 거리
+
+            this.moveSpeed = swipeLength / 500f;
+            Debug.LogFormat("movespeed{0}", this.moveSpeed);//내가 스와아ㅣ프한 길이에 따라사ㅓ 스피드가 달라짐
+
         }
         this.transform.Translate(this.moveSpeed, 0, 0);
-
-        this.moveSpeed *= dampingCoefficient;
+        this.moveSpeed *= this.dampingCoefficient;
+        //b.x-a.x = x좌표의거리 
     }
 }
